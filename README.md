@@ -16,3 +16,7 @@ Forma de entrega y defensa oral
 -	La entrega del TPO será a través de Teams y/o Webcampus (Única forma de entrega válida, no por mail u otro medio):
 -	Subir versión final de la implementación de la resolución del problema, junto con el informe solicitado en la fecha indicada por la cátedra. Los grupos que no realicen la entrega estarán desaprobados. Fecha entrega 16/11/2021
 -	Defensa oral del TPO: se realizará el día correspondiente según lo indicado en el cronograma. No se podrá hacer la defensa si la entrega final no fue aprobada por los docentes. Fecha 23/11/2021
+
+Links utiles:
+https://www.youtube.com/watch?v=1FEP_sNb62k video abdul
+https://www.techiedelight.com/travelling-salesman-problem-using-branch-and-bound/ la misma explicación pero en código y escrita
