@@ -20,3 +20,4 @@ Forma de entrega y defensa oral
 Links utiles:
 https://www.youtube.com/watch?v=1FEP_sNb62k video abdul
 https://www.techiedelight.com/travelling-salesman-problem-using-branch-and-bound/ la misma explicación pero en código y escrita
+http://www.heuristieken.nl/resources/(1963)Littleetal-_refurbished_AlgorithmforTSP.pdf
