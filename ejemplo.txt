@@ -1,0 +1,78 @@
+Algoritmo rutaPedidos
+Entrada: DatosClientes: File, Caminos: File
+
+resultado<-generarMatrizCosto(Caminos)
+
+listaCalidadCamino=primer elemento de resultado
+matrizCosto=segundo elemento de resultado
+
+inf<-INTEGER.MAX_VALUE
+
+restriccion<-inf
+
+mejorCosto<-inf
+mejorCamino<-null
+mejorTiempo<-0
+
+listaHorarios<-inicializarListaHorarios(DatosClientes)
+recorrido<-Char[n]
+recorrido[0]="A"
+
+mejorCosto,mejorCamino,mejorTiempo <- buscarCamino(listaCalidadCamino,listaHorarios,matrizCosto,restriccion,recorrido)
+
+matrizClientes<-DatosClientes
+
+para cada Char paso mejorCamino
+	indiceCliente<- paso.minúscula.int-97
+	si char.esElUltimo
+		imprimir(matrizClientes[indiceCliente][1]+" "matrizClientes[indiceCliente][2]
+	sino
+		imprimir(matrizClientes[indiceCliente][1]+" "matrizClientes[indiceCliente][2]+ "->"
+	fin si
+fin para
+
+imprimir("El costo de este camino es "+mejorCosto+" y termina la jornada a las "+mejorTiempo+" horas")
+	
+
+
+Algoritmo generarMatrizCosto
+Entrada: Caminos:File
+Salida: listaCalidadCamino, matrizCosto
+
+listaCalidadCamino<-inicializarMatriz(n,2)
+matrizCosto<-inicializarMatriz(n,n)
+
+try{
+	//abro el archivo
+	origenAuxiliar<-null
+	destinoAuxiliar<-null
+	comparacion<-inicializarMatriz()
+	para cada linea del archivo
+		lista<-//transformo en una lista la info separando elementos por csv
+		origenActual<-lista[0]
+		destinoActual<-lista[1]
+		si origenAuxiliar es igual a origenActual y destinoAuxiliar es igual a destinoActual
+			//agrego
+		sino
+			si hay elementos para comparar
+				//comparo
+				//agrego a la solucion lo necesario
+				si hay un camino definitivamente mejor
+					//agregarlo a matrizCosto y setear listaCalidadCamino como 0
+				sino
+					//buscar el mas rapido de los mas cortos y lo agregamos a matrizCosto
+					//seteamos listaCalidadCamino como 1 y le ponemos el camino mas corto de los mas rapidos
+				fin si
+				//seteo como auxiliar a los valores actuales
+			sino
+				//si es un camino real agrego a solucion, sino borro y
+				//agrego a matriz
+				//seteo como auxiliar los valores actuales
+			fin si
+		fin si
+	fin para
+catch(lo que sea){
+	//imprimir excepciones
+}
+
+devolver listaCalidadCamino,matrizCosto
