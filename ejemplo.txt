@@ -83,10 +83,6 @@ Algoritmo encontrarCamino
 Entrada: 
 Salida: 
 
-
-
-
-
 si = 0
 	iterar a lo larg de la lista de Caminos
 	fijarse si el tiempo dle que estas mirando y el km e mejor que el resto (samos booleano quecontrole)
