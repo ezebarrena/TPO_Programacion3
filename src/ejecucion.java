@@ -9,6 +9,16 @@ import impl.ListaHorarios;
 
 public class ejecucion {
 
+    public class NodoCosto {
+    
+        private int tiempoActual;
+        private int [][] matrizReducida;
+        private char nodoActual;
+        private char[] camino;
+        private float kilometros;
+        private int nivel;
+    }
+
     public static Object[] generarMatrizCosto(File Caminos,int n){
         ArrayList<Object>[][] listaCalidadCamino = new ArrayList[n][n];
         float[][][] matrizCosto = new float[n][n][4];
@@ -232,6 +242,7 @@ public class ejecucion {
         File DatosClientes=new File("DatosClientes.txt");
         File Caminos=new File("Caminos.txt");
         rutaPedidos(DatosClientes, Caminos);
+
 
     }
     
