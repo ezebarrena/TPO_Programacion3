@@ -3,24 +3,28 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Vector;
 
 import impl.ListaHorarios;
 
 public class ejecucion {
 
     public static ArrayList<int[][]> generarMatrizCosto(File Caminos,int n){
-        int[][] listaCalidadCamino= new int[n][2];
-        int[][] matrizCosto=new int[n][n];
-        ArrayList<int[][]> resultado=new ArrayList(2);
+        int[][] listaCalidadCamino = new int[n][n];
+        int[][] matrizCosto = new int[n][n];
+        int minutos = 0;
+
+        Vector [][][] caminos = new Vector [n][n][14];
+        //ArrayList<int[][]> resultado = new ArrayList(2)<[][]>; no sabemos para que es 
         
         try (BufferedReader br = new BufferedReader(new FileReader(Caminos))) {
             String linea;
-            Object[] lista= new Object[5];
-            Object[][] matriz=new Object[10][5];
-            String origenAuxiliar="";
-            String destinoAuxiliar="";
-            String origenActual="";
-            String destinoActual="";
+            Object[] lista = new Object[5];
+            Object[][] matriz = new Object[10][5];
+            String origenAuxiliar = "";
+            String destinoAuxiliar = "";
+            String origenActual = "";
+            String destinoActual = "";
 
             while ((linea = br.readLine()) != null) {
                linea.replace("\n","");

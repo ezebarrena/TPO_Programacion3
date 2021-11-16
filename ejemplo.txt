@@ -32,8 +32,8 @@ para cada Char paso mejorCamino
 fin para
 
 imprimir("El costo de este camino es "+mejorCosto+" y termina la jornada a las "+mejorTiempo+" horas")
-	
 
+---------------------------------------------------------------------------------------------------------
 
 Algoritmo generarMatrizCosto
 Entrada: Caminos:File
@@ -55,24 +55,40 @@ try{
 			//agrego
 		sino
 			si hay elementos para comparar
-				//comparo
-				//agrego a la solucion lo necesario
-				si hay un camino definitivamente mejor
-					//agregarlo a matrizCosto y setear listaCalidadCamino como 0
-				sino
-					//buscar el mas rapido de los mas cortos y lo agregamos a matrizCosto
-					//seteamos listaCalidadCamino como 1 y le ponemos el camino mas corto de los mas rapidos
-				fin si
+				encontrarCamino(comparacion) //modifica matriz
 				//seteo como auxiliar a los valores actuales
 			sino
 				//si es un camino real agrego a solucion, sino borro y
 				//agrego a matriz
 				//seteo como auxiliar los valores actuales
+		
+
 			fin si
 		fin si
+
+
+
 	fin para
 catch(lo que sea){
 	//imprimir excepciones
 }
 
+
+
 devolver listaCalidadCamino,matrizCosto
+
+------------------------------------------------------------------
+
+Algoritmo encontrarCamino
+Entrada: 
+Salida: 
+
+
+
+
+
+si = 0
+	iterar a lo larg de la lista de Caminos
+	fijarse si el tiempo dle que estas mirando y el km e mejor que el resto (samos booleano quecontrole)
+		TRue lo guardamos
+		False no hya uno mejor agarramos el mas corto y filtramos
