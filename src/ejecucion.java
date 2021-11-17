@@ -7,10 +7,17 @@ import java.util.Vector;
 
 import impl.ListaHorarios;
 
+
 public class ejecucion {
+    
+    static class Camino{
+        char origentxt;
+        char destinotxt;
+        int minutos;
+        float kilometros;
+    }
 
     public class NodoCosto {
-    
         private int tiempoActual;
         private int [][] matrizReducida;
         private char nodoActual;
@@ -20,8 +27,8 @@ public class ejecucion {
     }
 
     public static Object[] generarMatrizCosto(File Caminos,int n){
-        ArrayList<Object>[][] listaCalidadCamino = new ArrayList[n][n];
-        float[][][] matrizCosto = new float[n][n][4];
+        Camino[][][] listaCalidadCamino = new Camino[n][n][14];
+        Camino[][] matrizCosto = new Camino[n][n];
         float inf=Float.MAX_VALUE;        
 
         //ArrayList<int[][]> resultado = new ArrayList(2)<[][]>; no sabemos para que es 
@@ -29,7 +36,7 @@ public class ejecucion {
         try (BufferedReader br = new BufferedReader(new FileReader(Caminos))) {
             String linea;
             Object[] lista = new Object[4];
-            Object[][] comparacion = new Object[14][4];
+            Camino[] comparacion = new Camino[14];
             linea=br.readLine();
             linea=br.readLine();
             lista=linea.split(";");
@@ -63,12 +70,15 @@ public class ejecucion {
                     elementos=1;
                }
             }
+            seleccionarCamino(comparacion,listaCalidadCamino,matrizCosto,elementos);
         }
         catch(IOException e){
             e.printStackTrace();
         }
+        
         for(int i=0;i<n;i++){
-            matrizCosto[i][i][3]=inf;
+            matrizCosto[i][i]=new Camino();
+            matrizCosto[i][i].kilometros=inf;
         }
         Object[] resultado= new Object[3];
         resultado[0]=listaCalidadCamino;
@@ -77,109 +87,106 @@ public class ejecucion {
         return resultado;
     }
 
-    public static void seleccionarCamino(Object[][] comparacion, ArrayList<Object>[][] listaCalidadCamino, float[][][] matrizCosto,int elementos){
+    public static void seleccionarCamino(Camino[] comparacion, Camino[][][] listaCalidadCamino, Camino[][] matrizCosto,int elementos){
         //Obtenemos los indices del origen y destino
-        char o=(((String)comparacion[0][0])).charAt(0);
-        char d=(((String)comparacion[0][1])).charAt(0);
-        int origen=(int)o-65;
-        int destino=(int)d-65;
-        Long origenf=Long.valueOf((int)o-65);
-        Long destinof=Long.valueOf((int)d-65);
-        float origend=Float.parseFloat(destinof.toString());
-        float destinod=Float.parseFloat(origenf.toString());
+        char o=comparacion[0].origentxt;
+        char d=comparacion[0].destinotxt;
+        int origen=o-65;
+        int destino=d-65;
         //restamos 65 ya que A es = a 65 en ASCII
 
         if(elementos>1){ //Si hay mas de un elemento, hay que elegir cual usar
             boolean mejor=true;
             for(int i=0;i<elementos;i++){
-                float mejorTiempo=Float.parseFloat(comparacion[i][2].toString());//Si se rompe puede ser esto
-                float mejorDistancia=Float.parseFloat(comparacion[i][3].toString());
+                int mejorTiempo=comparacion[i].minutos;//Si se rompe puede ser esto
+                float mejorDistancia=comparacion[i].kilometros;
                 mejor=true;
                 for(int j=0;j<elementos;j++){
-                    if(Float.parseFloat(comparacion[j][2].toString())<mejorTiempo||Float.parseFloat(comparacion[j][3].toString())<mejorDistancia){
+                    if(comparacion[j].minutos<mejorTiempo||comparacion[j].kilometros<mejorDistancia){
                         //uno de los dos es peor que el que tenemos
                         mejor=false;
                         break;
                     }
                 }
                 if(mejor==true){ //significa que ningun camino lo supera en nada, por tanto, es el mejor
-                    matrizCosto[origen][destino][0]=origend;
-                    matrizCosto[origen][destino][1]=destinod;
-                    matrizCosto[origen][destino][2]=mejorTiempo;
-                    matrizCosto[origen][destino][3]=mejorDistancia;
-                    matrizCosto[destino][origen][0]=origend;
-                    matrizCosto[destino][origen][1]=destinod;
-                    matrizCosto[destino][origen][2]=mejorTiempo;
-                    matrizCosto[destino][origen][3]=mejorDistancia;
+                    matrizCosto[origen][destino]=new Camino();
+                    matrizCosto[origen][destino].origentxt=o;
+                    matrizCosto[origen][destino].destinotxt=d;
+                    matrizCosto[origen][destino].minutos=mejorTiempo;
+                    matrizCosto[origen][destino].kilometros=mejorDistancia;
+                    matrizCosto[destino][origen]=new Camino();
+                    matrizCosto[destino][origen].origentxt=d;
+                    matrizCosto[destino][origen].destinotxt=o;
+                    matrizCosto[destino][origen].minutos=mejorTiempo;
+                    matrizCosto[destino][origen].kilometros=mejorDistancia;
                     break;
                 }
             }
-            if(!mejor){ //si ninguno fue superior
+            if(!mejor){ 
+                //si ninguno fue superior
                 //hay que seleccionar el mas corto y 
                 //el resto (los que son mas rapidos que el mas corto)
                 //hay que agregarlos a las posibilidades
                 float mejorDistancia=Long.MAX_VALUE;
-                float tiempoMejor=Long.MAX_VALUE;
+                int tiempoMejor=Integer.MAX_VALUE;
                 for(int i=0;i<elementos;i++){//buscamos el mas corto
-                    if(Float.parseFloat(comparacion[i][3].toString())<mejorDistancia){
-                        mejorDistancia=Float.parseFloat(comparacion[i][3].toString());
-                        tiempoMejor=Float.parseFloat(comparacion[i][2].toString());
+                    if(comparacion[i].kilometros<mejorDistancia){
+                        mejorDistancia=comparacion[i].kilometros;
+                        tiempoMejor=comparacion[i].minutos;
                     }
                 }
                 //Agregamos el mas corto a la matriz costo
-                matrizCosto[origen][destino][0]=origend;
-                matrizCosto[origen][destino][1]=destinod;
-                matrizCosto[origen][destino][2]=tiempoMejor;
-                matrizCosto[origen][destino][3]=mejorDistancia;
-                matrizCosto[destino][origen][0]=origend;
-                matrizCosto[destino][origen][1]=destinod;
-                matrizCosto[destino][origen][2]=tiempoMejor;
-                matrizCosto[destino][origen][3]=mejorDistancia;
+                matrizCosto[origen][destino]=new Camino();
+                matrizCosto[destino][origen]=new Camino();
+                matrizCosto[origen][destino].origentxt=o;
+                matrizCosto[origen][destino].destinotxt=d;
+                matrizCosto[origen][destino].minutos=tiempoMejor;
+                matrizCosto[origen][destino].kilometros=mejorDistancia;
+                matrizCosto[destino][origen].destinotxt=o;
+                matrizCosto[destino][origen].origentxt=d;
+                matrizCosto[destino][origen].minutos=tiempoMejor;
+                matrizCosto[destino][origen].kilometros=mejorDistancia;
 
                 for(int i=0; i<elementos;i++){ //buscamos aquellos mas rapidos que el mas corto y los agregamos para considerarlos
-                    if(Float.parseFloat(comparacion[i][2].toString())<tiempoMejor){
+                    if(comparacion[i].minutos<tiempoMejor){
                         //Encontramos una posibilidad
-                        if(listaCalidadCamino[origen][destino]==null){
-                            listaCalidadCamino[origen][destino]=new ArrayList<>();
-                        }
-                        Object[] agregar=new Object[4];
-                        agregar[0]=comparacion[i][0];
-                        agregar[1]=comparacion[i][1];
-                        agregar[2]=comparacion[i][2];
-                        agregar[3]=comparacion[i][3];
-                        listaCalidadCamino[origen][destino].add(agregar);
+                        Camino agregar=new Camino();
+                        agregar.origentxt=comparacion[i].origentxt;
+                        agregar.destinotxt=comparacion[i].destinotxt;
+                        agregar.minutos=comparacion[i].minutos;
+                        agregar.kilometros=comparacion[i].kilometros;
+                        listaCalidadCamino[origen][destino][0]=agregar;
                         
                     }
                 }
             }
         }
         else{ //sino, hay un solo elemento y lo usamos
-            String mejorTiempo=comparacion[0][2].toString();
-            String mejorDistancia=comparacion[0][3].toString();
+            int mejorTiempo=comparacion[0].minutos;
+            float mejorDistancia=comparacion[0].kilometros;
 
-            float mejorTiempoN=Float.parseFloat(mejorTiempo);
-            float mejorDistanciaN=Float.parseFloat(mejorDistancia);
-
-
-            matrizCosto[origen][destino][0]=origend;
-            matrizCosto[origen][destino][1]=destinod;
-            matrizCosto[origen][destino][2]=mejorTiempoN;
-            matrizCosto[origen][destino][3]=mejorDistanciaN;
-            matrizCosto[destino][origen][0]=origend;
-            matrizCosto[destino][origen][1]=destinod;
-            matrizCosto[destino][origen][2]=mejorTiempoN;
-            matrizCosto[destino][origen][3]=mejorDistanciaN;
+            matrizCosto[origen][destino]=new Camino();
+            matrizCosto[destino][origen]=new Camino();
+            matrizCosto[origen][destino].origentxt=o;
+            matrizCosto[origen][destino].destinotxt=d;
+            matrizCosto[origen][destino].minutos=mejorTiempo;
+            matrizCosto[origen][destino].kilometros=mejorDistancia;
+            matrizCosto[destino][origen].origentxt=d;
+            matrizCosto[destino][origen].destinotxt=o;
+            matrizCosto[destino][origen].minutos=mejorTiempo;
+            matrizCosto[destino][origen].kilometros=mejorDistancia;
         }
         //Al ya haber agregado las cosas seteamos los elementos a 0 nuevamente
         elementos=0;
     }
 
-    public static void agregarElementoMatriz(Object[] lista,Object[][] comparacion,int elementos){
+    public static void agregarElementoMatriz(Object[] lista,ejecucion.Camino[] comparacion,int elementos){
         //Agregamos los elementos de la lista para la comparacion
-        comparacion[elementos][0]=lista[0];
-        comparacion[elementos][1]=lista[1];
-        comparacion[elementos][2]=lista[2];
-        comparacion[elementos][3]=lista[3];
+        comparacion[elementos]=new Camino();
+        comparacion[elementos].origentxt=((String)lista[0]).charAt(0);
+        comparacion[elementos].destinotxt=((String)lista[1]).charAt(0);
+        comparacion[elementos].minutos=Integer.parseInt((String)lista[2]);
+        comparacion[elementos].kilometros=Float.parseFloat((String)lista[3]);
     }
 
 
@@ -187,8 +194,8 @@ public class ejecucion {
     public static void rutaPedidos(File DatosClientes, File Caminos){
         int n=15;
         Object[] resultado=generarMatrizCosto(Caminos, n); //fijarse que los indices se correspondan
-        float[][][] matrizCostos=((float[][][])resultado[1]);
-        ArrayList<Object>[][] listaCalidad=(ArrayList<Object>[][]) resultado[0];
+        Camino[][] matrizCostos=((Camino[][])resultado[1]);
+        Camino[][][] listaCalidad=(Camino[][][]) resultado[0];
 
         
         
@@ -197,12 +204,13 @@ public class ejecucion {
         {
             for (int col = 0; col < n; col++)//Cycles through columns
             {
-                System.out.print(matrizCostos[row][col][3]+" "); //change the %5d to however much space you want
+                System.out.print(matrizCostos[row][col].kilometros+" "); //change the %5d to however much space you want
             }
             System.out.println(); //Makes a new row
         }
+        System.out.print("");
         
-        int[][] listaCalidadCamino=(int[][]) resultado[0];
+        /*int[][] listaCalidadCamino=(int[][]) resultado[0];
         int[][] matrizCosto=(int[][]) resultado[1];
 
         int inf=Integer.MAX_VALUE;
