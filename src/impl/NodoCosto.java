@@ -1,12 +1,31 @@
 package impl;
 
 public class NodoCosto {
+
     private int tiempoActual;
-    private int [][] matrizReducida;
+    private Camino [][] matrizReducida;
     private char nodoActual;
     private char[] camino;
-    private float kilometros;
     private int nivel;
+    private float cota;
+    char[] pendientes;
+    ListaHorarios listaHorarios;
+
+    public void setListaHorarios(ListaHorarios listaHorarios){
+        this.listaHorarios=listaHorarios;
+    }
+
+    public ListaHorarios getListaHorarios(){
+        return this.listaHorarios;
+    }
+
+	public void setPendientes(char[] pendientes){
+		this.pendientes=pendientes;
+	}
+
+	public char[] getPendientes(){
+		return this.pendientes;
+	}
 
     public void setTiempoActual(int x){
         this.tiempoActual = x;
@@ -16,11 +35,11 @@ public class NodoCosto {
         return tiempoActual;
     }
 
-    public void setMatrizReducida(int [][] x){
+    public void setMatrizReducida(Camino [][] x){
         this.matrizReducida = x;
     }
 
-    public int [][] getMatrizReducida(){
+    public Camino[][] getMatrizReducida(){
         return matrizReducida;
     }
 
@@ -40,20 +59,20 @@ public class NodoCosto {
         return camino;
     }
 
-    public void setKilometros(float x){
-        this.kilometros = x;
-    }
-
-    public float getKilometros(){
-        return kilometros;
-    }
-
     public void setNivel(int x){
         this.nivel = x;
     }
 
     public int getNivel(){
         return nivel;
+    }
+
+    public float getCota(){
+        return cota;
+    }
+
+    public void setCota(float x){
+        cota=x;
     }
 
 }
