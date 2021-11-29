@@ -17,9 +17,7 @@ public class ejecucion {
     public static Object[] generarMatrizCosto(File Caminos,int n){
         Camino[][][] listaCalidadCamino = new Camino[n][n][14];
         Camino[][] matrizCosto = new Camino[n][n];
-        float inf=Float.MAX_VALUE;        
-
-        //ArrayList<int[][]> resultado = new ArrayList(2)<[][]>; no sabemos para que es 
+        float inf=Float.MAX_VALUE;
         
         try (BufferedReader br = new BufferedReader(new FileReader(Caminos))) {
             String linea;
@@ -30,7 +28,7 @@ public class ejecucion {
             lista=linea.split(";");
             lista[3]=lista[3].toString().replace(",",".");
             int elementos=0;
-            String origenAuxiliar = (String)lista[0]; //Si se rompe puede ser esto
+            String origenAuxiliar = (String)lista[0];
             String destinoAuxiliar = (String)lista[1];
             String origenActual = (String)lista[0];
             String destinoActual = (String)lista[1];
@@ -418,7 +416,7 @@ public class ejecucion {
     }
 
 
-    public static Object[] buscarCamino(Camino[][] matrizCostos, Camino[][][] listaCalidadCaminos,File DatosClientes, int n){
+    public static Object[] buscarCamino(Camino[][] matrizCostos, File DatosClientes, int n){
         Object[] resultadocamino=new Object[4];
         char[] camino=new char[n];
         ArrayList<Camino> erro=new ArrayList<Camino>();
@@ -477,9 +475,6 @@ public class ejecucion {
                     Camino agregar=new Camino();
                     int num1=((int)menor.getNodoActual())-65;
                     int num2=((int)(caminosNodosSinTiempo[e]))-65;
-                    if(num1==-65 || num2==-65){
-                        System.out.print("Hola");
-                    }
                     agregar.destinotxt=caminosNodosSinTiempo[e];
                     agregar.origentxt=menor.getNodoActual();
                     agregar.minutos=matrizCostos[num1][num2].minutos;
@@ -547,26 +542,43 @@ public class ejecucion {
 
 
 
-        while(true){
-            Object[] resultados=buscarCamino(matrizCostos,listaCalidadCaminos,DatosClientes,n);
+       while(true) {
+            Object[] resultados=buscarCamino(matrizCostos, DatosClientes,n);
             if(mejorCosto>(float)resultados[2]){
                 mejorCosto=(float)resultados[2];
                 mejorTiempo=(int)resultados[1];
                 mejorCamino=(char[])resultados[0];
             }
             ArrayList<Camino> errores=(ArrayList<Camino>)resultados[3];
-            System.out.print("");
             //mirar si quedaron errores, si los hubo cambio el primer error y dejo que se repita el algoritmo
             //si no hay nada, break y fin
             if(!errores.isEmpty()){
-                //buscar la menor diferencia de km, cambiar lo necesario en matriz costo y dejar que se repita el algo
                 while(!errores.isEmpty()){
-                    Camino correcion=errores.get(0);
-                    int origenc=correcion.origentxt-65;
-                    int destinoc=correcion.destinotxt-65;
-                    if(listaCalidadCaminos[origenc][destinoc][0]!=null){
-                        Camino nuevo=listaCalidadCaminos[origenc][destinoc][0];
-                        matrizCostos[origenc][destinoc]=nuevo;
+                    Camino correccion=errores.get(0);
+					errores.remove(0);
+                    int origenc=correccion.origentxt-65;
+                    int destinoc=correccion.destinotxt-65;
+					int mejorTiempoCamino=infi;
+					float costoCaminoMejorT=inff;
+					int indice=-1;
+					for(int c=0;c<n;c++){
+						if(listaCalidadCaminos[origenc][destinoc][c]!=null){
+							if(listaCalidadCaminos[origenc][destinoc][c].minutos<mejorTiempoCamino){
+								mejorTiempoCamino=listaCalidadCaminos[origenc][destinoc][c].minutos;
+								costoCaminoMejorT=listaCalidadCaminos[origenc][destinoc][c].kilometros;
+								indice=c;
+                            }
+                        }
+                    }
+                    if(indice != -1){
+						listaCalidadCaminos[origenc][destinoc][indice]=null;
+						Camino nuevo= new Camino();
+						nuevo.minutos=mejorTiempoCamino;
+						nuevo.kilometros=costoCaminoMejorT;
+						nuevo.origentxt=correccion.origentxt;
+						nuevo.destinotxt=correccion.destinotxt;
+						matrizCostos[origenc][destinoc]=nuevo;
+						matrizCostos[destinoc][origenc]=nuevo;
                     }
                 }
             }
@@ -574,7 +586,6 @@ public class ejecucion {
                 break;
             }
         }
-
         int refOr=mejorCamino[14]-65;
         mejorTiempo+=matrizCostos[refOr][0].minutos;
 
